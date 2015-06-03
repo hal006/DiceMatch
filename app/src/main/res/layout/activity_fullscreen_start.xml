@@ -1,0 +1,59 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#000000"
+    tools:context=".FullscreenStartActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:id="@+id/fullscreen_content_controls"
+        android:background="#000000"
+        android:layout_gravity="center">
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start_button"
+            android:id="@+id/start_button"
+            android:layout_gravity="center_horizontal"
+            style="@style/btnStylelemon_chiffon"
+            android:layout_margin="5dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/load_button"
+            android:id="@+id/load_button"
+            android:layout_gravity="center_horizontal"
+            style="@style/btnStylelemon_chiffon"
+            android:layout_margin="5dp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/leader_button"
+            android:id="@+id/lead_button"
+            android:layout_gravity="center_horizontal"
+            style="@style/btnStylelemon_chiffon"
+            android:layout_margin="5dp" />
+
+        <Button
+            android:id="@+id/exit_button"
+            style="@style/btnStylelemon_chiffon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/exit_button"
+            android:layout_margin="5dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

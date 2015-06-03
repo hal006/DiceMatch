@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RowCategories xmlns:android="http://schemas.android.com/apk/res/android">
+    <row>
+        <id>0</id>
+        <name>Ones</name>
+        <description>Sum of ones in a throw</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>1</id>
+        <name>Twos</name>
+        <description>Sum of twos in a throw</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>2</id>
+        <name>Threes</name>
+        <description>Sum of threes in a throw</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>3</id>
+        <name>Fours</name>
+        <description>Sum of fours in a throw</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>4</id>
+        <name>Fives</name>
+        <description>Sum of fives in a throw</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>5</id>
+        <name>Sixes</name>
+        <description>Sum of sixes in a throw</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>6</id>
+        <name>Bonus 1</name>
+        <description>30 points if Sum of the above rows (Ones to Sixes) is greater than 62, 0 otherwise
+        </description>
+        <writeable>false</writeable>
+    </row>
+    <row>
+        <id>7</id>
+        <name>Three of a kind</name>
+        <description>Sum of dices if they contain 3 dices of the same value, 0 otherwise
+        </description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>8</id>
+        <name>Four of a kind</name>
+        <description>Sum of dices if they contain 4 dices of the same value, 0 otherwise
+        </description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>9</id>
+        <name>Full house</name>
+        <description>20 points for 3 matching dices and another 2 matching dices, 0 otherwise
+        </description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>10</id>
+        <name>Small straight</name>
+        <description>30 points for at least 4 dices of sequential rank, 0 otherwise</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>11</id>
+        <name>Large straight</name>
+        <description>40 points for 5 dices of sequential rank, 0 otherwise</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>12</id>
+        <name>Five of a kind</name>
+        <description>50 points for 5 equal dices, 0 otherwise</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>13</id>
+        <name>Bonus 2</name>
+        <description>100 points for every Five of a kind after the first one</description>
+        <writeable>false</writeable>
+    </row>
+    <row>
+        <id>14</id>
+        <name>Free</name>
+        <description>Sum of all dices</description>
+        <writeable>true</writeable>
+    </row>
+    <row>
+        <id>15</id>
+        <name>Total score</name>
+        <description>Total score summary</description>
+        <writeable>false</writeable>
+    </row>
+</RowCategories>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hal.dicematch.util.ScoreFragment">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+            <Button
+                style="@style/btnStylelemon_chiffon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/save_exit"
+                android:id="@+id/saveGame"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="5dp" />
+
+            <Button
+                style="@style/btnStylelemon_chiffon"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Help"
+                android:id="@+id/help_button"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/scoreList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true">
+        </ListView>
+    </LinearLayout>
+
+</FrameLayout>

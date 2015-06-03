@@ -1,0 +1,56 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:background="#000000"
+    tools:context="com.example.hal.dicematch.ScoreHelpActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|top">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/helpTextHeading"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0"
+            style="@style/lvStylelemon_chiffon"
+            android:textSize="20dp"
+            android:gravity="left" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/helpText"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0"
+            style="@style/lvStylelemon_chiffon"
+            android:gravity="fill_horizontal|left"
+            android:textSize="12dp"
+            android:textColor="#000000"
+            android:textStyle="italic"
+            android:padding="20dp" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/listHelpView"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:id="@+id/backHelpButton"
+            android:layout_weight="0"
+            style="@style/lvStylelemon_chiffon"/>
+    </LinearLayout>
+</FrameLayout>
