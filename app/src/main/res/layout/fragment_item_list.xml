@@ -16,20 +16,20 @@
             android:layout_marginBottom="5dp">
 
             <Button
-                style="@style/btnStylelemon_chiffon"
+                style="@style/btnStylelemon_chiffon_nonmenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/save_exit"
                 android:id="@+id/saveGame"
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
-                android:layout_marginRight="5dp" />
+                android:layout_marginRight="5sp" />
 
             <Button
-                style="@style/btnStylelemon_chiffon"
+                style="@style/btnStylelemon_chiffon_nonmenu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Help"
+                android:text="@string/help"
                 android:id="@+id/help_button"
                 android:layout_weight="1" />
         </LinearLayout>
@@ -38,8 +38,7 @@
             android:id="@+id/scoreList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true">
+            android:fadeScrollbars="false" >
         </ListView>
     </LinearLayout>
 

@@ -12,6 +12,7 @@ public class Player implements Serializable{
     boolean bonus1Activated = false;
     boolean bonus1Writen = false;
     boolean bonus2Activated = false;
+    private int bonus2;
 
 
     public Player (int rows) {
@@ -48,6 +49,11 @@ public class Player implements Serializable{
                     this.scoreList.set(6, 30);
                     this.bonus1Writen = true;
                 }
+                if (bonus2>1) {
+                    this.scoreList.set(rowsTotal - 1, (this.scoreList.get(rowsTotal - 1) + (bonus2-1)*100));
+                    this.scoreList.set(13, (bonus2-1)*100);
+                    this.bonus1Writen = true;
+                }
             }
             this.writableList.set(position, false);
             this.scoreList.set(rowsTotal - 1, (this.scoreList.get(rowsTotal - 1) + tmp));
@@ -77,7 +83,7 @@ public class Player implements Serializable{
             case 7:case 8:
                 temp=0;
                 for (int i = 0; i < dices.size(); i++) {
-                    if (dices.get(2) == dices.get(i)) {
+                    if (dices.get(2).equals(dices.get(i))) {
                         temp++;
                     }
                     tmp += dices.get(i);
@@ -90,10 +96,10 @@ public class Player implements Serializable{
                 temp = 0;
                 temp2 = 0;
                 for (int i = 0; i < dices.size(); i++) {
-                    if (dices.get(0) == dices.get(i)) {
+                    if (dices.get(0).equals(dices.get(i))) {
                         temp++;
                     }
-                    if (dices.get(4) == dices.get(i)) {
+                    if (dices.get(4).equals(dices.get(i))) {
                         temp2++;
                     }
                 }
@@ -101,6 +107,15 @@ public class Player implements Serializable{
                     tmp = 20;
                 } else {
                     tmp = 0;
+                }
+                temp=0;
+                for (int i = 0; i < dices.size(); i++) {
+                    if (dices.get(2).equals(dices.get(i))) {
+                        temp++;
+                    }
+                }
+                if (temp == 5) {
+                    tmp = 20;
                 }
                 break;
             case 10: case 11:
@@ -110,7 +125,7 @@ public class Player implements Serializable{
                     if (dices.get(i)==dices.get(i+1)-1) {
                         temp++;
                     }
-                    if (dices.get(i)==dices.get(i+1)) {
+                    if (dices.get(i).equals(dices.get(i+1))) {
                         temp2++;
                     }
                 }
@@ -128,7 +143,7 @@ public class Player implements Serializable{
             case 12:
                 temp=0;
                 for (int i = 0; i < dices.size(); i++) {
-                    if (dices.get(2) == dices.get(i)) {
+                    if (dices.get(2).equals(dices.get(i))) {
                         temp++;
                     }
                 }
@@ -141,6 +156,16 @@ public class Player implements Serializable{
                     tmp+=dices.get(i);
                 }
                 break;
+            default:
+                temp=0;
+                for (int i = 0; i < dices.size(); i++) {
+                    if (dices.get(2).equals(dices.get(i))) {
+                        temp++;
+                    }
+                }
+                if ((temp == 5)&&(this.getScore(12)!=0)) {
+                    this.bonus2++;
+                }
         }
         return tmp;
     }
@@ -149,4 +174,7 @@ public class Player implements Serializable{
         return this.bonus1Activated;
     }
 
+    public int getBonus2() {
+        return bonus2;
+    }
 }

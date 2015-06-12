@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.hal.dicematch.util.ListViewScoreAdapter;
-import com.example.hal.dicematch.util.SystemUiHider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,11 +31,12 @@ public class HighScoreActivity extends Activity {
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             setContentView(R.layout.activity_high_score);
-
+            //Remove notification bar
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-
-            }
+//            if (extras != null) {
+//
+//            }
             View.OnClickListener backHandler = new View.OnClickListener() {
                 public void onClick(View v) {
                     finish();
@@ -69,6 +70,7 @@ public class HighScoreActivity extends Activity {
         super.onDestroy();
     }
 
+    @SuppressWarnings("unchecked")
     void loadScores() {
         try {
             File file = new File(this.getFilesDir().getAbsolutePath() + "/high_scores.dat");

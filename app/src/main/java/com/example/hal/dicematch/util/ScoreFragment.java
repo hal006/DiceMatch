@@ -28,37 +28,41 @@ import java.util.List;
 
 public class ScoreFragment extends Fragment implements AbsListView.OnItemClickListener, Serializable {
 
-    private boolean saveScoreNow;
     private ArrayList<Integer> dices;
     OnNextRoundListener oListener;
 
 
     public interface OnNextRoundListener {
         void onNextRoundThrow();
-
         boolean writeRow(int row, ArrayList<Integer> dices);
-
         Integer getScore();
-
         ArrayList<Boolean> getFinished();
-
         Integer newTotalScore();
-
         boolean getBonus1();
-
         void onExitGame();
-
         void sendResult(String result);
+        Boolean isTimeToWriteScore();
+        void setTimeToWriteScore(Boolean timeToWriteScore);
+        int getBonus2();
     }
+
+    private ArrayList<HashMap<String, String>> list;
+    public static final String FIRST_COLUMN = "Choice";
+    public static final String SECOND_COLUMN = "Score";
+    public static ArrayList<String> categories2;
+    List<Integer> scoreList = new ArrayList<>();
+    List<Boolean> writableList = new ArrayList<>();
+    int roundNumber = 0;
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
 
-    public void refreshScoreFragment(Player actualPlayer) {
+    public void refreshScoreFragment(Player actualPlayer, XmlResourceParser xmlParser) {
         this.scoreList = actualPlayer.getFullScore();
         this.list = new ArrayList<>();
+        categories2 = readXMLdata(xmlParser);
         for (int i = 0; i < categories2.size(); i++) {
             HashMap<String, String> temp = new HashMap<>();
             temp.put(FIRST_COLUMN, categories2.get(i));
@@ -67,51 +71,35 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
         }
     }
 
-    private ArrayList<HashMap<String, String>> list;
-    public static final String FIRST_COLUMN = "Choice";
-    public static final String SECOND_COLUMN = "Score";
-    public static ArrayList<String> categories2;
-    List<Integer> scoreList = new ArrayList<Integer>();
-    List<Boolean> writableList = new ArrayList<Boolean>();
-    int roundNumber = 0;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("INFO", "score created");
-        saveScoreNow = false;
-        categories2 = readXMLdata();
+        categories2 = readXMLdata(getActivity().getResources().getXml(R.xml.categories));
         for (int i = 0; i < categories2.size(); i++) {
             scoreList.add(0);
         }
-
-
-
     }
 
-    private ArrayList<String> readXMLdata() {
-        XmlResourceParser xrp = getActivity().getResources().getXml(R.xml.categories);
-        ArrayList<String> categ = new ArrayList<String>();
+    private ArrayList<String> readXMLdata(XmlResourceParser xmlParser) {
+        ArrayList<String> categ = new ArrayList<>();
         try {
-            xrp.next();
-            int eventType = xrp.getEventType();
+            xmlParser.next();
+            int eventType = xmlParser.getEventType();
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                if (eventType == XmlPullParser.START_TAG
-                        && xrp.getName().equalsIgnoreCase("id")) {
-                } else {
                     if (eventType == XmlPullParser.START_TAG
-                            && xrp.getName().equalsIgnoreCase("name")) {
-                        xrp.next();
-                        String cat = xrp.getText();
+                            && xmlParser.getName().equalsIgnoreCase("name")) {
+                        xmlParser.next();
+                        String cat = xmlParser.getText();
                         //int intValue = xrp.getAttributeIntValue(null, "order", 0);
                         //Log.d("INFO", cat);
                         categ.add(cat);
                     }
-                }
-                eventType = xrp.next();
+                eventType = xmlParser.next();
             }
         } catch (Exception e) {
-            Log.d("INFO", e.toString());
+            Log.e("INFO", "readXML chyba" + e.toString());
         }
         return categ;
     }
@@ -161,30 +149,38 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
-
-                if ((saveScoreNow) && (oListener.writeRow(position, dices))) {
-                    HashMap<String, String> temp = new HashMap<>();
-                    temp.put(FIRST_COLUMN, categories2.get(position));
-                    temp.put(SECOND_COLUMN, oListener.getScore().toString());
-                    HashMap<String, String> temp2 = new HashMap<>();
-                    temp2.put(FIRST_COLUMN, categories2.get(categories2.size() - 1));
-
-                    if (oListener.getBonus1()) {
-                        HashMap<String, String> temp3 = new HashMap<>();
-                        temp3.put(FIRST_COLUMN, categories2.get(6));
-                        temp3.put(SECOND_COLUMN, "" + 30);
-                        list.set(6, temp3);
-                    }
-                    temp2.put(SECOND_COLUMN, oListener.newTotalScore().toString());
-                    list.set(position, temp);
-                    list.set(categories2.size() - 1, temp2);
-                    ListViewAdapter adapter = new ListViewAdapter(oListener.getFinished(), getActivity(), list);
-                    listView.setAdapter(adapter);
-                    oListener.onNextRoundThrow();
-                    roundNumber++;
-                    saveScoreNow = false;
-                    if (roundNumber == 13) {
-                        oListener.sendResult(temp2.get(SECOND_COLUMN));
+                if ((oListener.isTimeToWriteScore()) && (oListener.writeRow(position, dices))) {
+                    try {
+                        HashMap<String, String> temp = new HashMap<>();
+                        temp.put(FIRST_COLUMN, categories2.get(position));
+                        temp.put(SECOND_COLUMN, oListener.getScore().toString());
+                        HashMap<String, String> temp2 = new HashMap<>();
+                        temp2.put(FIRST_COLUMN, categories2.get(categories2.size() - 1));
+                        if (oListener.getBonus1()) {
+                            HashMap<String, String> temp3 = new HashMap<>();
+                            temp3.put(FIRST_COLUMN, categories2.get(6));
+                            temp3.put(SECOND_COLUMN, "" + 30);
+                            list.set(6, temp3);
+                        }
+                        if (oListener.getBonus2()>1) {
+                            HashMap<String, String> temp4 = new HashMap<>();
+                            temp4.put(FIRST_COLUMN, categories2.get(13));
+                            temp4.put(SECOND_COLUMN, "" + (100*(oListener.getBonus2()-1)));
+                            list.set(13, temp4);
+                        }
+                        temp2.put(SECOND_COLUMN, oListener.newTotalScore().toString());
+                        list.set(position, temp);
+                        list.set(categories2.size() - 1, temp2);
+                        ListViewAdapter adapter = new ListViewAdapter(oListener.getFinished(), getActivity(), list);
+                        listView.setAdapter(adapter);
+                        oListener.onNextRoundThrow();
+                        roundNumber++;
+                        oListener.setTimeToWriteScore(false);
+                        if (roundNumber == 13) {
+                            oListener.sendResult(temp2.get(SECOND_COLUMN));
+                        }
+                    }catch (Exception e) {
+                        Log.d("INFO",e.toString());
                     }
                 }
                 //int pos = position + 1;
@@ -205,7 +201,11 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     public void saveRoll(ArrayList<Integer> dices) {
-        saveScoreNow = true;
+        oListener.setTimeToWriteScore(true);
+        setValues (dices);
+    }
+
+    public void setValues(ArrayList<Integer> dices) {
         this.dices = dices;
     }
 

@@ -14,7 +14,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0sp"
         android:id="@+id/scoreWindow"
         android:layout_weight="1"
         android:layout_marginLeft="0dp"
@@ -29,5 +29,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/diceWindow"
-        android:layout_marginBottom="0dp"></FrameLayout>
+        android:layout_marginBottom="0dp" />
 </LinearLayout>

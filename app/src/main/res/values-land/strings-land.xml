@@ -1,0 +1,5 @@
+<resources>
+    <string name="save_and_exit">Save\n&amp;\nExit</string>
+    <string name="roll_dices">Roll\n(Red)\nDice</string>
+    <string name="finish_roll">Finish\nRoll</string>
+</resources>

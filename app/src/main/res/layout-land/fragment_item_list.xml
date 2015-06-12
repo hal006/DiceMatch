@@ -7,7 +7,8 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
@@ -17,16 +18,16 @@
             android:layout_marginRight="5dp">
 
             <Button
-                style="@style/btnStylelemon_chiffon"
+                style="@style/btnStylelemon_chiffon_nonmenu"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:text="@string/save_exit"
+                android:text="@string/save_and_exit"
                 android:id="@+id/saveGame"
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="5dp"/>
             <Button
-                style="@style/btnStylelemon_chiffon"
+                style="@style/btnStylelemon_chiffon_nonmenu"
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:text="Help"
@@ -36,11 +37,10 @@
 
         <ListView
             android:id="@+id/scoreList"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_weight="1">
+            android:layout_width="0sp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:fadeScrollbars="false" >
         </ListView>
 
     </LinearLayout>

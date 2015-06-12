@@ -25,9 +25,9 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Back to menu"
+            android:text="@string/back"
             android:id="@+id/back_button"
             android:layout_gravity="center_horizontal"
-            style="@style/btnStylelemon_chiffon"/>
+            style="@style/btnStylelemon_chiffon_nonmenu"/>
     </LinearLayout>
 </FrameLayout>

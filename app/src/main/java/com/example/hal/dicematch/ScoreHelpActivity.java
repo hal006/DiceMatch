@@ -1,39 +1,28 @@
 package com.example.hal.dicematch;
 
-import com.example.hal.dicematch.util.ListViewHelpAdapter;
-import com.example.hal.dicematch.util.ListViewScoreAdapter;
-import com.example.hal.dicematch.util.util.SystemUiHider;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.res.XmlResourceParser;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.hal.dicematch.R;
+import com.example.hal.dicematch.util.ListViewHelpAdapter;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ScoreHelpActivity extends Activity {
 
-    private static final String TUTORIAL_TEXT = "Main goal of the game is to get as much points as possible in 13 turns. " +
+    private static final String TUTORIAL_TEXT = "This game is a remake of the original Yahtzee dice game. Main goal of the game is to get as much points as possible in 13 turns. " +
             "Turns consist of 3 consequent rolls with 5 or less dice. Each roll, player chooses which dice to reroll by selecting it. " +
-            "After 3 rolls or after finishing roll with button, player has to pick a category. " +
+            "After 3 rolls or after finishing the roll with a button, player has to pick a category. " +
             "Each category (row in score list) can be selected only once and has its own unique way to calculate score (as described below).";
     private static final String TUTORIAL_TEXT_HEADING = "How to play this game:";
     private ArrayList<HashMap<String, String>> highScoreHelpList;
@@ -47,11 +36,9 @@ public class ScoreHelpActivity extends Activity {
             this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
             setContentView(R.layout.activity_score_help);
-
+            //Remove notification bar
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
             Bundle extras = getIntent().getExtras();
-            if (extras != null) {
-
-            }
             View.OnClickListener backHandler = new View.OnClickListener() {
                 public void onClick(View v) {
                     finish();

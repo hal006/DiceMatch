@@ -23,19 +23,37 @@ public class DiceFragment extends Fragment implements Serializable {
     private static final int DICES_COUNT = 5;
     final Handler mHandler = new Handler();
     OnFinishRollSelectedListener mListener;
-    boolean wait;
     int actualThrow = 0;
     View diceSettings;
     private ArrayList<Dice> dices = new ArrayList<>();
     private ArrayList<Integer> diceValues = new ArrayList<>();
     int diceSize;
+    private boolean newGame = true;
 
     public DiceFragment() {
         // Required empty public constructor
     }
 
+
+    public void lightFinish(boolean timeToWriteScore) {
+        if (timeToWriteScore) {
+            diceSettings.findViewById(R.id.finishButton).setBackground(getResources().getDrawable(R.drawable.custom_btn_lemon_clicked));
+        } else {
+            diceSettings.findViewById(R.id.finishButton).setBackground(getResources().getDrawable(R.drawable.custom_btn_lemon_nonmenu));
+        }
+    }
+
+    public void falseNewGame () {
+        newGame = false;
+    }
+
     public void setDiceSize (int diceSize) {
         this.diceSize = diceSize;
+    }
+
+    public void setThrowStatus (int throwNumber) {
+        this.actualThrow = throwNumber;
+        //this.wait = wait;
     }
 
     // TODO: Rename and change types and number of parameters
@@ -48,10 +66,6 @@ public class DiceFragment extends Fragment implements Serializable {
         return fragment;
     }
 
-    public void enterScore(byte[] values) {
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,13 +76,15 @@ public class DiceFragment extends Fragment implements Serializable {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         initDiceFragment(inflater, container, savedInstanceState);
+        mListener.setTimeToWriteScore(mListener.isTimeToWriteScore());
+        if (actualThrow >= 2) {
+            diceSettings.findViewById(R.id.finishButton).performClick();
+        }
         return diceSettings;
     }
 
     public void initDiceFragment (LayoutInflater inflater, ViewGroup container,
                                   Bundle savedInstanceState) {
-
-        wait = false;
         diceSettings = inflater.inflate(R.layout.fragment_dice, container, false);
         // Inflate the layout for this fragment
         this.createDice(savedInstanceState);
@@ -77,25 +93,27 @@ public class DiceFragment extends Fragment implements Serializable {
 
         diceSettings.findViewById(R.id.rollButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                rollSelectedDice();
-                saveDiceValues();
+                if (!mListener.isTimeToWriteScore()) {
+                    rollSelectedDice();
+                    saveDiceValues();
+                }
             }
         });
 
 
         diceSettings.findViewById(R.id.finishButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("INFO",wait+"");
-                if (!wait) {
+                Log.d("INFO", mListener.isTimeToWriteScore() + " performed click");
+                if (!mListener.isTimeToWriteScore()) {
                     for (int i = 0; i < dices.size(); i++) {
                         dices.get(i).setChecked(false);
                     }
-                    ArrayList<Integer> tmp = new ArrayList<Integer>(); //sorted
+                    ArrayList<Integer> tmp = new ArrayList<>(); //sorted
                     for (int i = 0; i < DICES_COUNT; i++) {
                         tmp.add(dices.get(i).getValue());
                     }
                     mListener.onFinishThrow(tmp);
-                    wait = true;
+                    mListener.setTimeToWriteScore(true);
                 }
             }
         });
@@ -127,14 +145,14 @@ public class DiceFragment extends Fragment implements Serializable {
                 final int finalI = i;
                 if (savedInstanceState==null) {
                     dices.add(new Dice(but));
-                    dices.get(i).roll(true);
+                    //dices.get(i).roll(true);
                 } else {
                     dices.add(new Dice(diceValues.get(i),but));
 
                 }
                 dices.get(i).setHandler(new View.OnClickListener() {
                     public void onClick(View v) {
-                        if (!wait) {
+                        if (!mListener.isTimeToWriteScore()) {
                             dices.get(finalI).changeChecked();
                         }
                     }
@@ -144,16 +162,17 @@ public class DiceFragment extends Fragment implements Serializable {
                 this.setDices(diceValues);
                 Log.d("INFO", "Loading dices");
             }
+            if ((newGame)&&(savedInstanceState==null)) {
+                rollAllDice();
+                falseNewGame();
+            }
         } catch (Exception e) {
-            Log.d("INFO", e + " chyba " + e.getLocalizedMessage());
+            Log.e("INFO", e + " chyba " + e.getLocalizedMessage());
         }
     }
 
     public void rollAllDice() {
         for (int j = 0; j < 7; j++) {
-
-
-            final int finalJ = j;
             mHandler.postDelayed(new Runnable() {
                 public void run() {
                     for (int i = 0; i < DICES_COUNT; i++) {
@@ -167,7 +186,7 @@ public class DiceFragment extends Fragment implements Serializable {
         mHandler.postDelayed(new Runnable() {
             public void run() {
                 reorderDices();
-                wait = false;
+                mListener.setTimeToWriteScore(false);
             }
         }, 1400);
     }
@@ -182,7 +201,7 @@ public class DiceFragment extends Fragment implements Serializable {
     }
 
     public void rollSelectedDice() {
-        for (int j = 0; j < 7; j++) {
+        for (int j = 0; j < 6; j++) {
             mHandler.postDelayed(new Runnable() {
                 public void run() {
                     for (int i = 0; i < DICES_COUNT; i++) {
@@ -200,7 +219,7 @@ public class DiceFragment extends Fragment implements Serializable {
                 }
 
             }
-        }, 1400);
+        }, 1200);
     }
 
     public void setDices(ArrayList<Integer> diceValues) {
@@ -229,19 +248,13 @@ public class DiceFragment extends Fragment implements Serializable {
 
     public void swapDices(int i, int j) {
         int tmp = dices.get(i).getValue();
-        dices.get(i).setValue(dices.get(j).getValue());
-        dices.get(j).setValue(tmp);
         if (dices.get(i).getChecked() != dices.get(j).getChecked()) {
             dices.get(i).changeChecked();
             dices.get(j).changeChecked();
         }
-    }
+        dices.get(i).setValue(dices.get(j).getValue());
+        dices.get(j).setValue(tmp);
 
-    public void setRollNumber(int actualThrow) {
-        this.actualThrow = actualThrow;
-        if (actualThrow >= 2) {
-            diceSettings.findViewById(R.id.finishButton).performClick();
-        }
     }
 
     public int getRollNumber() {
@@ -250,5 +263,7 @@ public class DiceFragment extends Fragment implements Serializable {
 
     public interface OnFinishRollSelectedListener {
         void onFinishThrow(ArrayList<Integer> dices);
+        Boolean isTimeToWriteScore();
+        void setTimeToWriteScore(Boolean timeToWriteScore);
     }
 }

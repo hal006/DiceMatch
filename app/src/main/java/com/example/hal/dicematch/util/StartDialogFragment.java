@@ -1,5 +1,6 @@
 package com.example.hal.dicematch.util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ public class StartDialogFragment extends DialogFragment{
         final View startSettings = inflater.inflate(R.layout.fragment_start_dialog, container, false);
             SeekBar bar1 = (SeekBar) startSettings.findViewById(R.id.plCountBar);
             bar1.setProgress(0);
+        bar1.setEnabled(false);
             ((TextView) (startSettings.findViewById(R.id.noPlay))).setText("Human Players: " + 1);
             bar1.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
                 //@Override
@@ -104,10 +106,10 @@ public class StartDialogFragment extends DialogFragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
-            if(resultCode == getActivity().RESULT_OK){
+            if(resultCode == Activity.RESULT_OK){
                 Log.d("INFO", "fra" + data.getStringExtra("result"));
             }
-            if (resultCode == getActivity().RESULT_CANCELED) {
+            if (resultCode == Activity.RESULT_CANCELED) {
                 Log.d("INFO", "fra canceled");
             }
         }

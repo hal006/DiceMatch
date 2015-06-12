@@ -12,124 +12,122 @@
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="0.25" />
-
-            <com.example.hal.dicematch.util.SquareButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/dice1"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:layout_weight="0.5"
-                android:layout_gravity="center"
-                android:textSize="@dimen/abc_text_size_large_material"
-                android:layout_margin="5dp"
-                style="@style/btnStylelemon_chiffon"/>
-
-            <com.example.hal.dicematch.util.SquareButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/dice2"
-                android:layout_column="2"
-                android:layout_row="0"
-                android:layout_weight="0.5"
-                android:layout_gravity="center"
-                android:textSize="@dimen/abc_text_size_large_material"
-                android:layout_margin="5dp"
-                style="@style/btnStylelemon_chiffon"/>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="fill_parent"
-                android:layout_weight="0.25" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <com.example.hal.dicematch.util.SquareButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/dice3"
-                android:layout_row="1"
-                android:layout_column="1"
-                android:layout_weight="0.5"
-                android:textSize="@dimen/abc_text_size_large_material"
-                android:layout_margin="5dp"
-                android:layout_gravity="center"
-                style="@style/btnStylelemon_chiffon"/>
-
-            <com.example.hal.dicematch.util.SquareButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/dice4"
-                android:layout_column="0"
-                android:layout_row="2"
-                android:layout_weight="0.5"
-                android:layout_gravity="center"
-                android:textSize="@dimen/abc_text_size_large_material"
-                android:layout_margin="5dp"
-                style="@style/btnStylelemon_chiffon"/>
-
-            <com.example.hal.dicematch.util.SquareButton
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/dice5"
-                android:layout_column="2"
-                android:layout_row="2"
-                android:layout_weight="0.5"
-                android:layout_gravity="center"
-                android:textSize="@dimen/abc_text_size_large_material"
-                android:layout_margin="5dp"
-                style="@style/btnStylelemon_chiffon"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.example.hal.dicematch.util.SquareButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/dice1"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/abc_text_size_large_material"
+                    android:layout_margin="5dp"
+                    style="@style/btnStylelemon_chiffon"/>
+
+                <com.example.hal.dicematch.util.SquareButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/dice2"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/abc_text_size_large_material"
+                    android:layout_margin="5dp"
+                    style="@style/btnStylelemon_chiffon"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.25" />
+
+                <com.example.hal.dicematch.util.SquareButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/dice3"
+                    android:layout_weight="0.5"
+                    android:textSize="@dimen/abc_text_size_large_material"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center"
+                    style="@style/btnStylelemon_chiffon"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="0.25" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <com.example.hal.dicematch.util.SquareButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/dice4"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/abc_text_size_large_material"
+                    android:layout_margin="5dp"
+                    style="@style/btnStylelemon_chiffon"/>
+
+                <com.example.hal.dicematch.util.SquareButton
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/dice5"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/abc_text_size_large_material"
+                    android:layout_margin="5dp"
+                    style="@style/btnStylelemon_chiffon"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0">
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Roll Dices"
+                android:text="@string/roll_dice"
                 android:id="@+id/rollButton"
-                android:layout_row="4"
-                android:layout_column="0"
-                android:layout_columnSpan="3"
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
-                style="@style/btnStylelemon_chiffon"
+                style="@style/btnStylelemon_chiffon_nonmenu"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp" />
 
             <Button
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Finish Roll"
+                android:text="@string/finish_roll"
                 android:id="@+id/finishButton"
-                android:layout_row="5"
-                android:layout_column="0"
-                android:layout_columnSpan="3"
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
-                style="@style/btnStylelemon_chiffon"
-                android:layout_marginLeft="5dp"
+                style="@style/btnStylelemon_chiffon_nonmenu"
                 android:layout_marginRight="5dp" />
-
         </LinearLayout>
 
     </LinearLayout>

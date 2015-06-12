@@ -14,7 +14,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left|top">
+        android:layout_gravity="start|top">
 
         <TextView
             android:layout_width="match_parent"
@@ -22,9 +22,9 @@
             android:id="@+id/helpTextHeading"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0"
-            style="@style/lvStylelemon_chiffon"
-            android:textSize="20dp"
-            android:gravity="left" />
+            style="@style/btnStylelemon_chiffon_nonmenu"
+            android:textSize="20sp"
+            android:gravity="start" />
 
         <TextView
             android:layout_width="match_parent"
@@ -32,9 +32,9 @@
             android:id="@+id/helpText"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0"
-            style="@style/lvStylelemon_chiffon"
-            android:gravity="fill_horizontal|left"
-            android:textSize="12dp"
+            style="@style/btnStylelemon_chiffon_nonmenu"
+            android:gravity="fill_horizontal|start"
+            android:textSize="12sp"
             android:textColor="#000000"
             android:textStyle="italic"
             android:padding="20dp" />
@@ -48,9 +48,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Back"
+            android:text="@string/back"
             android:id="@+id/backHelpButton"
             android:layout_weight="0"
-            style="@style/lvStylelemon_chiffon"/>
+            style="@style/btnStylelemon_chiffon_nonmenu"/>
     </LinearLayout>
 </FrameLayout>

@@ -2,11 +2,13 @@ package com.example.hal.dicematch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.hal.dicematch.util.DiceFragment;
 import com.example.hal.dicematch.util.Game;
@@ -25,12 +27,13 @@ import java.util.HashMap;
 
 public class GameActivity extends FragmentActivity implements DiceFragment.OnFinishRollSelectedListener, ScoreFragment.OnNextRoundListener {
 
+    public String lastName = "Name";
     int numberOfRounds;
     ScoreFragment scoreFragment;
     DiceFragment diceFragment;
     Game newGame;
     Integer scoreToWrite = 0;
-    public String lastName = "Name";
+    private Boolean timeToWriteScore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,11 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
     }
 
     @Override
+    public int getBonus2() {
+        return newGame.getActivePlayer().getBonus2();
+    }
+
+    @Override
     public void onExitGame() {
         this.saveGame();
         Intent returnIntent = new Intent();
@@ -75,37 +83,37 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
     @Override
     public void sendResult(final String result) {
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result",result);
+        returnIntent.putExtra("result", result);
         setResult(RESULT_OK, returnIntent);
         finish();
     }
 
-    public void saveGame () {
-            diceFragment.saveDiceValues();
-            File file = new File("save_game.dat");
-            HashMap<String, Serializable> data = new HashMap<>();
-            data.put("1", diceFragment.getDiceValues());
-            data.put("2", numberOfRounds);
-            data.put("3", scoreToWrite);
-            data.put("4", newGame);
-            data.put("5", scoreFragment.getList());
-            data.put("6", scoreFragment.getRoundNumber());
-            data.put("7", lastName);
-            data.put("8", diceFragment.getRollNumber());
-            try {
+    public void saveGame() {
+        diceFragment.saveDiceValues();
+        File file = new File("save_game.dat");
+        HashMap<String, Serializable> data = new HashMap<>();
+        data.put("1", diceFragment.getDiceValues());
+        data.put("2", numberOfRounds);
+        data.put("3", scoreToWrite);
+        data.put("4", newGame);
+        data.put("5", scoreFragment.getList());
+        data.put("6", scoreFragment.getRoundNumber());
+        data.put("7", lastName);
+        data.put("8", diceFragment.getRollNumber());
+        data.put("9", isTimeToWriteScore());
+        try {
 
-                FileOutputStream fos = openFileOutput(file.toString(), Context.MODE_PRIVATE);
-                ObjectOutputStream oos = new ObjectOutputStream(fos);
-                oos.writeObject(data);
-                oos.flush();
-                oos.close();
-                fos.close();
+            FileOutputStream fos = openFileOutput(file.toString(), Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(data);
+            oos.flush();
+            oos.close();
+            fos.close();
 
-            } catch (Exception e) {
-                Log.d("INFO", e.toString());
-            }
+        } catch (Exception e) {
+            Log.d("INFO", e.toString());
+        }
     }
-
 
 
     @Override
@@ -120,7 +128,7 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
 
     @Override
     public void onNextRoundThrow() {
-        diceFragment.setRollNumber(0);
+        diceFragment.setThrowStatus(0);
         diceFragment.rollAllDice();
     }
 
@@ -131,43 +139,43 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
         this.saveGame();
     }
 
-        public void initUI(Bundle savedInstanceState) {
+    public void initUI(Bundle savedInstanceState) {
+        timeToWriteScore = false;
 
-            setContentView(R.layout.activity_game);
-            //Remove notification bar
-            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            Bundle extras = getIntent().getExtras();
+        setContentView(R.layout.activity_game);
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Bundle extras = getIntent().getExtras();
 
-            if (scoreFragment == null) {
-                scoreFragment = new ScoreFragment();
-                Log.d("INFO", "sc created");
-            } else {
-                Log.d("INFO", "sc exists");
-            }
-            if (diceFragment == null) diceFragment = new DiceFragment();
+        if (scoreFragment == null) {
+            scoreFragment = new ScoreFragment();
+            Log.d("INFO", "sc created");
+        } else {
+            Log.d("INFO", "sc exists");
+        }
+        if (diceFragment == null) diceFragment = new DiceFragment();
 
 
-
-            Log.d("INFO", "adding fragments");
-            getFragmentManager().beginTransaction().add(R.id.scoreWindow, scoreFragment).commit();
+        Log.d("INFO", "adding fragments");
+        getFragmentManager().beginTransaction().add(R.id.scoreWindow, scoreFragment).commit();
         Log.d("INFO", "adding dice fragments");
-            getFragmentManager().beginTransaction().add(R.id.diceWindow, diceFragment).commit();
-            // Create a new Fragment to be placed in the activity layout
+        getFragmentManager().beginTransaction().add(R.id.diceWindow, diceFragment).commit();
+        // Create a new Fragment to be placed in the activity layout
         diceFragment.setDiceSize(50);
-            Log.d("INFO", "added fragments");
-            //scoreFragment.setArguments(getIntent().getExtras());
-        if ((extras != null)||(savedInstanceState != null)) {
+        Log.d("INFO", "added fragments");
+        //scoreFragment.setArguments(getIntent().getExtras());
+        if ((extras != null) || (savedInstanceState != null)) {
             Log.d("INFO", "extras exists");
             this.loadGame();
+            diceFragment.falseNewGame();
         } else {
             Log.d("INFO", "new game");
             this.numberOfRounds = 16;
             this.newGame = new Game(1, 0);
-
+            Toast.makeText(getApplicationContext(), "Select dice to roll.", Toast.LENGTH_LONG).show();
         }
-            Player firstPlayer = new Player(numberOfRounds);
     }
-
+    @SuppressWarnings("unchecked")
     void loadGame() {
         try {
             File file = new File(this.getFilesDir().getAbsolutePath() + "/save_game.dat");
@@ -175,18 +183,28 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
             ObjectInputStream ois = new ObjectInputStream(fos);
             HashMap<String, Serializable> loadedData;
             loadedData = (HashMap<String, Serializable>) ois.readObject();
-            Log.d("INFO", "setting dice values");
             diceFragment.setValues((ArrayList<Integer>) loadedData.get("1"));
             this.numberOfRounds = (int) loadedData.get("2");
             this.scoreToWrite = (int) loadedData.get("3");
             this.newGame = (Game) loadedData.get("4");
-            this.scoreFragment.refreshScoreFragment(newGame.getActivePlayer());
+            this.scoreFragment.setList((ArrayList<HashMap<String, String>>) loadedData.get("5"));
+            this.scoreFragment.refreshScoreFragment(newGame.getActivePlayer(), getResources().getXml(R.xml.categories));
             this.scoreFragment.setRoundNumber((int) loadedData.get("6"));
-            this.lastName = (String)loadedData.get("7");
-            this.diceFragment.setRollNumber((int)loadedData.get("8"));
-            Log.d("INFO", ""+loadedData.get("8"));
+            this.lastName = (String) loadedData.get("7");
+            this.diceFragment.setThrowStatus((int) loadedData.get("8"));
+            timeToWriteScore = (Boolean) loadedData.get("9");
+            scoreFragment.setValues((ArrayList<Integer>) loadedData.get("1"));
         } catch (Exception e) {
-            Log.d("INFO", e.toString());
+            Log.e("INFO", "loading error " + e.toString());
         }
+    }
+
+    public Boolean isTimeToWriteScore() {
+        return timeToWriteScore;
+    }
+
+    public void setTimeToWriteScore(Boolean timeToWriteScore) {
+        this.timeToWriteScore = timeToWriteScore;
+        diceFragment.lightFinish(timeToWriteScore);
     }
 }

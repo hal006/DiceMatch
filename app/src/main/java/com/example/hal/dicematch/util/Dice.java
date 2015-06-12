@@ -2,7 +2,11 @@ package com.example.hal.dicematch.util;
 
 import com.example.hal.dicematch.GameActivity;
 import com.example.hal.dicematch.R;
+
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,7 +14,7 @@ import android.widget.Button;
 
 import java.io.Serializable;
 
-public class Dice  implements Serializable {
+public class Dice implements Serializable {
     private boolean checked;
     private int value;
     private SquareButton diceButton;
@@ -23,10 +27,10 @@ public class Dice  implements Serializable {
     }
 
     public Dice(SquareButton but) {
-        this(((int) Math.floor(Math.random() * 6 + 1)), but );
+        this(((int) Math.floor(Math.random() * 6 + 1)), but);
     }
 
-    public static void setResources (Resources res) {
+    public static void setResources(Resources res) {
         Dice.res = res;
     }
 
@@ -45,7 +49,6 @@ public class Dice  implements Serializable {
     public boolean getChecked() {
         return this.checked;
     }
-
 
 
     public void setHandler(View.OnClickListener hand) {
@@ -78,29 +81,6 @@ public class Dice  implements Serializable {
 
     private void setButtonImage() {
         try {
-
-        if (this.checked) {
-            switch (value) {
-                case 1:
-                    diceButton.setBackground(res.getDrawable(R.drawable.dice1c));
-                    break;
-                case 2:
-                    diceButton.setBackground(res.getDrawable(R.drawable.dice2c));
-                    break;
-                case 3:
-                    diceButton.setBackground(res.getDrawable(R.drawable.dice3c));
-                    break;
-                case 4:
-                    diceButton.setBackground(res.getDrawable(R.drawable.dice4c));
-                    break;
-                case 5:
-                    diceButton.setBackground(res.getDrawable(R.drawable.dice5c));
-                    break;
-                case 6:
-                    diceButton.setBackground(res.getDrawable(R.drawable.dice6c));
-                    break;
-            }
-        } else {
             switch (value) {
                 case 1:
                     diceButton.setBackground(res.getDrawable(R.drawable.dice1));
@@ -113,6 +93,7 @@ public class Dice  implements Serializable {
                     break;
                 case 4:
                     diceButton.setBackground(res.getDrawable(R.drawable.dice4));
+
                     break;
                 case 5:
                     diceButton.setBackground(res.getDrawable(R.drawable.dice5));
@@ -121,10 +102,13 @@ public class Dice  implements Serializable {
                     diceButton.setBackground(res.getDrawable(R.drawable.dice6));
                     break;
             }
-        }
-
+            if (this.checked) {
+                diceButton.getBackground().setColorFilter(Color.argb(100, 255, 140, 140), PorterDuff.Mode.DARKEN);
+            } else {
+                diceButton.getBackground().setColorFilter(null);
+            }
         } catch (Exception e) {
-            Log.d("INFO",e.toString());
+            Log.d("INFO", e.toString());
         }
     }
 }
