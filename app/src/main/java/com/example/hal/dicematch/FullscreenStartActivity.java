@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,10 +40,14 @@ public class FullscreenStartActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Remove title bar
+        Log.d("INFO", "act created");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        Log.d("INFO", "act created");
         super.onCreate(savedInstanceState);
+        Log.d("INFO", "act created");
         initUI(savedInstanceState);
 //        //Remove notification bar
+        Log.d("INFO", "act created");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         Log.d("INFO", "act created");
@@ -121,10 +126,44 @@ public class FullscreenStartActivity extends FragmentActivity {
 //    }
 
     @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        Log.d("INFO", "restored");
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+    @Override
+    public void onResume(){
+        Log.d("INFO", "resume");
+        super.onResume();
+        // put your code here...
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onRestart();
+        Log.i("INFO", "On start .....");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("INFO", "On Restart .....");
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        Log.d("INFO", "prepare");
+//code here
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e("INFO",""+resultCode);
+        try {
         if (resultCode == RESULT_OK) {
             final String result = data.getStringExtra("result");
-
+            Log.e("INFO",""+result);
             if (Integer.valueOf(result) > getLowestScore()) {
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.hc_submit_name);
@@ -147,10 +186,14 @@ public class FullscreenStartActivity extends FragmentActivity {
                 Toast.makeText(getApplicationContext(), "You didn't make it to the high scores.",
                         Toast.LENGTH_LONG).show();
             }
+        }        else {
+
         }
-//        else {
-//
-//        }
+        } catch (Exception e) {
+                Log.e("INFO",e.toString());
+            }
+
+
 
     }
 
@@ -188,7 +231,7 @@ public class FullscreenStartActivity extends FragmentActivity {
                 scores.remove(HIGH_SCORE_SIZE);
             }
 
-            File file = new File("high_scores.dat");
+            File file = new File("high_score.dat");
             HashMap<String, Serializable> data = new HashMap<>();
             data.put("1", scores);
             FileOutputStream fos = openFileOutput(file.toString(), Context.MODE_PRIVATE);
@@ -199,7 +242,7 @@ public class FullscreenStartActivity extends FragmentActivity {
             fos.close();
 
         } catch (Exception e) {
-            Log.d("INFO", e.toString());
+            Log.e("INFO", "save score chyba" + e.toString());
         }
     }
 
@@ -214,29 +257,28 @@ public class FullscreenStartActivity extends FragmentActivity {
     @SuppressWarnings("unchecked")
     public ArrayList<HashMap<String, String>> loadScores() {
         try {
-            File file = new File(this.getFilesDir().getAbsolutePath() + "/high_scores.dat");
-            Log.d("INFO", "highscores object loaded");
+            File file = new File(this.getFilesDir().getAbsolutePath() + "/high_score.dat");
             if (file.exists()) {
-                Log.d("INFO", "highscores object loaded");
                 FileInputStream fos = new FileInputStream(file.toString());
                 ObjectInputStream ois = new ObjectInputStream(fos);
                 HashMap<String, Serializable> loadedData;
                 loadedData = (HashMap<String, Serializable>) ois.readObject();
-                Log.d("INFO", "highscores object loaded");
+                ois.close();
+                fos.close();
                 return (ArrayList<HashMap<String, String>>) loadedData.get("1");
             } else {
-                Log.d("INFO", "highscores objectdsdadds loaded");
                 return new ArrayList<>();
             }
 
         } catch (Exception e) {
-            Log.d("INFO", e.toString());
+            Log.e("INFO", "load scores chyba " + e.toString());
         }
         return new ArrayList<>();
     }
 
     @Override
     protected void onStop() {
+        Log.e("INFO", "savstop");
         super.onStop();
     }
 

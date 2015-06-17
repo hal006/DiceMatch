@@ -42,6 +42,37 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
         initUI(savedInstanceState);
     }
 
+    public void initUI(Bundle savedInstanceState) {
+        timeToWriteScore = false;
+
+        setContentView(R.layout.activity_game);
+        //Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        Bundle extras = getIntent().getExtras();
+
+        if (scoreFragment == null) {
+            scoreFragment = new ScoreFragment();
+        } else {
+        }
+        if (diceFragment == null) diceFragment = new DiceFragment();
+
+        getFragmentManager().beginTransaction().add(R.id.scoreWindow, scoreFragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.diceWindow, diceFragment).commit();
+        // Create a new Fragment to be placed in the activity layout
+        diceFragment.setDiceSize(50);
+        //scoreFragment.setArguments(getIntent().getExtras());
+        if ((extras != null) || (savedInstanceState != null)) {
+            Log.d("INFO", "extras exists");
+            this.loadGame();
+            diceFragment.falseNewGame();
+        } else {
+            Log.d("INFO", "new game");
+            this.numberOfRounds = 16;
+            this.newGame = new Game(1, 0);
+            Toast.makeText(getApplicationContext(), "Select dice to roll.", Toast.LENGTH_LONG).show();
+        }
+    }
+
     @Override
     public void onFinishThrow(ArrayList<Integer> diceValues) {
         scoreFragment.saveRoll(diceValues);
@@ -73,18 +104,20 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
     }
 
     @Override
-    public void onExitGame() {
-        this.saveGame();
+    public void endGame(String s) {
         Intent returnIntent = new Intent();
-        setResult(RESULT_CANCELED, returnIntent);
+        Bundle b =new Bundle();
+        b.putString("result", s);
+        returnIntent.putExtras(b);
+        setResult(RESULT_OK, returnIntent);
         finish();
     }
 
     @Override
-    public void sendResult(final String result) {
+    public void onExitGame() {
+        this.saveGame();
         Intent returnIntent = new Intent();
-        returnIntent.putExtra("result", result);
-        setResult(RESULT_OK, returnIntent);
+        setResult(RESULT_CANCELED, returnIntent);
         finish();
     }
 
@@ -128,53 +161,21 @@ public class GameActivity extends FragmentActivity implements DiceFragment.OnFin
 
     @Override
     public void onNextRoundThrow() {
-        diceFragment.setThrowStatus(0);
-        diceFragment.rollAllDice();
+        if (scoreFragment.getRoundNumber() == 13) {
+            endGame(""+newGame.getActivePlayer().getScore(numberOfRounds-1));
+        } else {
+            diceFragment.setThrowStatus(0);
+            diceFragment.rollAllDice();
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         //super.onSaveInstanceState(outState);
-        Log.d("INFO", "save instance activity");
         this.saveGame();
     }
 
-    public void initUI(Bundle savedInstanceState) {
-        timeToWriteScore = false;
 
-        setContentView(R.layout.activity_game);
-        //Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        Bundle extras = getIntent().getExtras();
-
-        if (scoreFragment == null) {
-            scoreFragment = new ScoreFragment();
-            Log.d("INFO", "sc created");
-        } else {
-            Log.d("INFO", "sc exists");
-        }
-        if (diceFragment == null) diceFragment = new DiceFragment();
-
-
-        Log.d("INFO", "adding fragments");
-        getFragmentManager().beginTransaction().add(R.id.scoreWindow, scoreFragment).commit();
-        Log.d("INFO", "adding dice fragments");
-        getFragmentManager().beginTransaction().add(R.id.diceWindow, diceFragment).commit();
-        // Create a new Fragment to be placed in the activity layout
-        diceFragment.setDiceSize(50);
-        Log.d("INFO", "added fragments");
-        //scoreFragment.setArguments(getIntent().getExtras());
-        if ((extras != null) || (savedInstanceState != null)) {
-            Log.d("INFO", "extras exists");
-            this.loadGame();
-            diceFragment.falseNewGame();
-        } else {
-            Log.d("INFO", "new game");
-            this.numberOfRounds = 16;
-            this.newGame = new Game(1, 0);
-            Toast.makeText(getApplicationContext(), "Select dice to roll.", Toast.LENGTH_LONG).show();
-        }
-    }
     @SuppressWarnings("unchecked")
     void loadGame() {
         try {

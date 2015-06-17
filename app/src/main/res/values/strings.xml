@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiceMatch</string>
+    <string name="app_name">Dice Match</string>
     <string name="start_button">New Game</string>
     <string name="load_button">Continue Game</string>
     <string name="leader_button">Leaderboard</string>

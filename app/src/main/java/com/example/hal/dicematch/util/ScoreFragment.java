@@ -40,10 +40,10 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
         Integer newTotalScore();
         boolean getBonus1();
         void onExitGame();
-        void sendResult(String result);
         Boolean isTimeToWriteScore();
         void setTimeToWriteScore(Boolean timeToWriteScore);
         int getBonus2();
+        void endGame(String s);
     }
 
     private ArrayList<HashMap<String, String>> list;
@@ -145,7 +145,6 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
 
         ListViewAdapter adapter = new ListViewAdapter(oListener.getFinished(), getActivity(), list);
         listView.setAdapter(adapter);
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, final View view, int position, long id) {
@@ -162,10 +161,10 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
                             temp3.put(SECOND_COLUMN, "" + 30);
                             list.set(6, temp3);
                         }
-                        if (oListener.getBonus2()>1) {
+                        if (oListener.getBonus2() > 1) {
                             HashMap<String, String> temp4 = new HashMap<>();
                             temp4.put(FIRST_COLUMN, categories2.get(13));
-                            temp4.put(SECOND_COLUMN, "" + (100*(oListener.getBonus2()-1)));
+                            temp4.put(SECOND_COLUMN, "" + (100 * (oListener.getBonus2() - 1)));
                             list.set(13, temp4);
                         }
                         temp2.put(SECOND_COLUMN, oListener.newTotalScore().toString());
@@ -173,14 +172,13 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
                         list.set(categories2.size() - 1, temp2);
                         ListViewAdapter adapter = new ListViewAdapter(oListener.getFinished(), getActivity(), list);
                         listView.setAdapter(adapter);
-                        oListener.onNextRoundThrow();
                         roundNumber++;
                         oListener.setTimeToWriteScore(false);
-                        if (roundNumber == 13) {
-                            oListener.sendResult(temp2.get(SECOND_COLUMN));
-                        }
-                    }catch (Exception e) {
-                        Log.d("INFO",e.toString());
+                        oListener.onNextRoundThrow();
+
+
+                    } catch (Exception e) {
+                        Log.d("INFO", e.toString());
                     }
                 }
                 //int pos = position + 1;
