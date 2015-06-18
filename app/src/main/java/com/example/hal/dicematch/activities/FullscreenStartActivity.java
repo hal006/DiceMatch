@@ -1,4 +1,4 @@
-package com.example.hal.dicematch;
+package com.example.hal.dicematch.activities;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,18 +7,16 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.hal.dicematch.util.StartDialogFragment;
+import com.example.hal.dicematch.R;
+import com.example.hal.dicematch.fragments.StartDialogFragment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,23 +38,15 @@ public class FullscreenStartActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Remove title bar
-        Log.d("INFO", "act created");
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        Log.d("INFO", "act created");
         super.onCreate(savedInstanceState);
-        Log.d("INFO", "act created");
-        initUI(savedInstanceState);
+        initUI();
 //        //Remove notification bar
-        Log.d("INFO", "act created");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        Log.d("INFO", "act created");
-        //final View contentView = findViewById(R.id.fullscreen_content);
     }
 
-    public void initUI(Bundle savedInstanceState) {
+    public void initUI() {
         setContentView(R.layout.activity_fullscreen_start);
-        Log.d("INFO", "act created");
         Button b1 = (Button) findViewById(R.id.exit_button);
         Button b2 = (Button) findViewById(R.id.start_button);
         Button b3 = (Button) findViewById(R.id.load_button);
@@ -101,102 +91,59 @@ public class FullscreenStartActivity extends FragmentActivity {
         b1.setOnClickListener(exitHandler);
         b2.setOnClickListener(newGameHandler);
         b3.setOnClickListener(loadGameHandler);
-//        b3.setOnClickListener(myhandler3);
         b4.setOnClickListener(highScoreHandler);
-//        if (savedInstanceState != null)
-//            onRestoreInstanceState(savedInstanceState);
-
     }
-
-    //    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        //super.onSaveInstanceState(outState);
-//        Log.d("INFO", "save full instance activity");
-//    }
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//        Log.d("INFO", "onRestoreInstanceState");
-//    }
-//
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        Log.d("INFO", "onSaveInstanceState");
-//    }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.d("INFO", "restored");
         super.onRestoreInstanceState(savedInstanceState);
     }
-    @Override
-    public void onResume(){
-        Log.d("INFO", "resume");
-        super.onResume();
-        // put your code here...
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onRestart();
-        Log.i("INFO", "On start .....");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.i("INFO", "On Restart .....");
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu){
-        Log.d("INFO", "prepare");
-//code here
-        return super.onPrepareOptionsMenu(menu);
-    }
-
+    /**
+     * Method checks whether a new final score enters leaderboard.
+     * If so, inserts it into a correct row.
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.e("INFO",""+resultCode);
+        Log.e("INFO", "" + resultCode);
         try {
-        if (resultCode == RESULT_OK) {
-            final String result = data.getStringExtra("result");
-            Log.e("INFO",""+result);
-            if (Integer.valueOf(result) > getLowestScore()) {
-                final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.hc_submit_name);
-                //dialog.setTitle("Title");
-                ((TextView) dialog.findViewById(R.id.score_field)).setText(result);
-                ((EditText) dialog.findViewById(R.id.name_input)).setText(lastName);
-                Button button = (Button) dialog.findViewById(R.id.submit_name);
-                button.setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View v) {
+            if (resultCode == RESULT_OK) {
+                final String result = data.getStringExtra("result");
+                Log.e("INFO", "" + result);
+                if (Integer.valueOf(result) > getLowestScore()) {
+                    final Dialog dialog = new Dialog(this);
+                    dialog.setContentView(R.layout.hc_submit_name);
+                    //dialog.setTitle("Title");
+                    ((TextView) dialog.findViewById(R.id.score_field)).setText(result);
+                    ((EditText) dialog.findViewById(R.id.name_input)).setText(lastName);
+                    Button button = (Button) dialog.findViewById(R.id.submit_name);
+                    button.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
 
-                        EditText edit = (EditText) dialog.findViewById(R.id.name_input);
-                        String text = edit.getText().toString();
+                            EditText edit = (EditText) dialog.findViewById(R.id.name_input);
+                            String text = edit.getText().toString();
 
-                        dialog.dismiss();
-                        saveScore(text, result);
-                    }
-                });
-                dialog.show();
+                            dialog.dismiss();
+                            saveScore(text, result);
+                        }
+                    });
+                    dialog.show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "You didn't make it to the high scores.",
+                            Toast.LENGTH_LONG).show();
+                }
             } else {
-                Toast.makeText(getApplicationContext(), "You didn't make it to the high scores.",
-                        Toast.LENGTH_LONG).show();
-            }
-        }        else {
 
-        }
+            }
         } catch (Exception e) {
-                Log.e("INFO",e.toString());
-            }
-
-
-
+            Log.e("INFO", e.toString());
+        }
     }
 
+    /**
+     * Method to order dice values and save and obtain a score value for them.
+     */
     public void saveScore(String name, String value) {
         try {
             ArrayList<HashMap<String, String>> scores = loadScores();
@@ -254,6 +201,7 @@ public class FullscreenStartActivity extends FragmentActivity {
             return 0;
         }
     }
+
     @SuppressWarnings("unchecked")
     public ArrayList<HashMap<String, String>> loadScores() {
         try {

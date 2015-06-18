@@ -1,4 +1,4 @@
-package com.example.hal.dicematch.util;
+package com.example.hal.dicematch.listViewSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,12 @@ import android.widget.TextView;
 
 import com.example.hal.dicematch.R;
 
-public class ListViewScoreAdapter extends ArrayAdapter<HashMap<String, String>> {
+/**
+ * Custom adapter for three column ListView (String, String, String),
+ * first column automatically created as a row number
+ * supporting now only HighScoreActivity
+ */
+public class HSListViewAdapter extends ArrayAdapter<HashMap<String, String>> {
 
     public static final String FIRST_COLUMN="Name";
     public static final String SECOND_COLUMN="Score";
@@ -28,7 +33,7 @@ public class ListViewScoreAdapter extends ArrayAdapter<HashMap<String, String>> 
     TextView txtSecond;
     TextView txtThird;
 
-    public ListViewScoreAdapter(Context context, ArrayList<HashMap<String, String>> list) {
+    public HSListViewAdapter(Context context, ArrayList<HashMap<String, String>> list) {
         super(context, R.layout.highscore_row, list);
         this.context = context;
         this.list = list;

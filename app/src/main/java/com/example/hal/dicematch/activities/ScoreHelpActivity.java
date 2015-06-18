@@ -1,4 +1,4 @@
-package com.example.hal.dicematch;
+package com.example.hal.dicematch.activities;
 
 import android.app.Activity;
 import android.content.res.XmlResourceParser;
@@ -11,13 +11,17 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.hal.dicematch.util.ListViewHelpAdapter;
+import com.example.hal.dicematch.R;
+import com.example.hal.dicematch.listViewSupport.HelpListViewAdapter;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Activity showing game help.
+ */
 public class ScoreHelpActivity extends Activity {
 
     private static final String TUTORIAL_TEXT = "This game is a remake of the original Yahtzee dice game. Main goal of the game is to get as much points as possible in 13 turns. " +
@@ -53,19 +57,11 @@ public class ScoreHelpActivity extends Activity {
             ListView listView = (ListView) findViewById(R.id.listHelpView);
             this.readXMLdata();
             Log.d("INFO", highScoreHelpList.size()+"");
-            ListViewHelpAdapter adapter = new ListViewHelpAdapter(this, highScoreHelpList);
+            HelpListViewAdapter adapter = new HelpListViewAdapter(this, highScoreHelpList);
             listView.setAdapter(adapter);
         } catch (Exception e) {
             Log.d("INFO", e.toString());
         }
-    }
-
-    public ArrayList<HashMap<String, String>> getList () {
-        return highScoreHelpList;
-    }
-
-    public void setList (ArrayList<HashMap<String, String>> list) {
-        this.highScoreHelpList=list;
     }
 
     @Override
@@ -77,20 +73,9 @@ public class ScoreHelpActivity extends Activity {
         super.onDestroy();
     }
 
-//    void loadHelpScores() {
-//        try {
-//            File file = new File(this.getFilesDir().getAbsolutePath() + "/high_scores.dat");
-//            FileInputStream fos = new FileInputStream(file.toString());
-//            ObjectInputStream ois = new ObjectInputStream(fos);
-//            HashMap<String, Serializable> loadedData;
-//            loadedData = (HashMap<String, Serializable>) ois.readObject();
-//            this.highScoreHelpList = (ArrayList<HashMap<String, String>>) loadedData.get("1");
-//
-//        } catch (Exception e) {
-//            Log.d("INFO", e.toString());
-//        }
-//    }
-
+    /**
+     * Loads score tutorial from the XML file.
+     */
     private void readXMLdata() {
         XmlResourceParser xrp = this.getResources().getXml(R.xml.categories);
         highScoreHelpList = new ArrayList<>();
@@ -111,11 +96,8 @@ public class ScoreHelpActivity extends Activity {
                             && xrp.getName().equalsIgnoreCase("description")) {
                         xrp.next();
                         String cat = xrp.getText();
-                        //int intValue = xrp.getAttributeIntValue(null, "order", 0);
-                        //Log.d("INFO", cat);
                         tempMap.put(SECOND_COLUMN, cat);
                         highScoreHelpList.add(tempMap);
-                       // Log.d("INFO", tempMap.toString());
                     }
                 }
                 eventType = xrp.next();

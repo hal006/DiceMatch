@@ -1,4 +1,4 @@
-package com.example.hal.dicematch.util;
+package com.example.hal.dicematch.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -13,11 +13,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.hal.dicematch.HighScoreActivity;
 import com.example.hal.dicematch.R;
-import com.example.hal.dicematch.ScoreHelpActivity;
-import com.example.hal.dicematch.util.ListViewAdapter;
-import com.example.hal.dicematch.util.Player;
+import com.example.hal.dicematch.activities.ScoreHelpActivity;
+import com.example.hal.dicematch.gameLogic.Player;
+import com.example.hal.dicematch.listViewSupport.ScoreListViewAdapter;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -26,12 +25,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Fragment containing score ListView and buttons for invocation of a help activity and exit/save.
+ */
 public class ScoreFragment extends Fragment implements AbsListView.OnItemClickListener, Serializable {
 
     private ArrayList<Integer> dices;
     OnNextRoundListener oListener;
 
-
+    /**
+     * Interface for communication with the calling Activity.
+     */
     public interface OnNextRoundListener {
         void onNextRoundThrow();
         boolean writeRow(int row, ArrayList<Integer> dices);
@@ -56,9 +60,11 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
     }
 
+    /**
+     * Method called by GameActivity to prepare actual score list.
+     */
     public void refreshScoreFragment(Player actualPlayer, XmlResourceParser xmlParser) {
         this.scoreList = actualPlayer.getFullScore();
         this.list = new ArrayList<>();
@@ -82,6 +88,9 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
         }
     }
 
+    /**
+     * Reads description for each score category.
+     */
     private ArrayList<String> readXMLdata(XmlResourceParser xmlParser) {
         ArrayList<String> categ = new ArrayList<>();
         try {
@@ -103,16 +112,6 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
         }
         return categ;
     }
-
-//    public void onConfigurationChanged(Configuration newConfig) {
-//   /* Super... */
-//        super.onConfigurationChanged(newConfig);
-//        Log.d("INFO", "changes score orient");
-//   /* Re-create view... */
-//        ViewGroup viewGroup = (ViewGroup) getView();
-//        viewGroup.removeAllViewsInLayout();
-//        View view = onCreateView(getActivity().getLayoutInflater(), viewGroup, null); viewGroup.addView(view);
-//    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -143,7 +142,7 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
             list.add(temp);
         }
 
-        ListViewAdapter adapter = new ListViewAdapter(oListener.getFinished(), getActivity(), list);
+        ScoreListViewAdapter adapter = new ScoreListViewAdapter(oListener.getFinished(), getActivity(), list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -161,16 +160,16 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
                             temp3.put(SECOND_COLUMN, "" + 30);
                             list.set(6, temp3);
                         }
-                        if (oListener.getBonus2() > 1) {
+                        if (oListener.getBonus2() >= 1) {
                             HashMap<String, String> temp4 = new HashMap<>();
                             temp4.put(FIRST_COLUMN, categories2.get(13));
-                            temp4.put(SECOND_COLUMN, "" + (100 * (oListener.getBonus2() - 1)));
+                            temp4.put(SECOND_COLUMN, "" + (100 * (oListener.getBonus2())));
                             list.set(13, temp4);
                         }
                         temp2.put(SECOND_COLUMN, oListener.newTotalScore().toString());
                         list.set(position, temp);
                         list.set(categories2.size() - 1, temp2);
-                        ListViewAdapter adapter = new ListViewAdapter(oListener.getFinished(), getActivity(), list);
+                        ScoreListViewAdapter adapter = new ScoreListViewAdapter(oListener.getFinished(), getActivity(), list);
                         listView.setAdapter(adapter);
                         roundNumber++;
                         oListener.setTimeToWriteScore(false);
@@ -181,8 +180,6 @@ public class ScoreFragment extends Fragment implements AbsListView.OnItemClickLi
                         Log.d("INFO", e.toString());
                     }
                 }
-                //int pos = position + 1;
-                //Toast.makeText(getActivity(), Integer.toString(pos) + " Clicked", Toast.LENGTH_SHORT).show();
             }
 
         });

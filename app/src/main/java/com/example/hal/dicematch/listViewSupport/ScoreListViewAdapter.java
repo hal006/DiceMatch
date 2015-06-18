@@ -1,4 +1,4 @@
-package com.example.hal.dicematch.util;
+package com.example.hal.dicematch.listViewSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,15 +12,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.hal.dicematch.R;
 
-public class ListViewAdapter extends ArrayAdapter<HashMap<String, String>> {
+
+/**
+ * Custom adapter for two column ListView (String, String),
+ * supporting now only ScoreFragment
+ */
+public class ScoreListViewAdapter extends ArrayAdapter<HashMap<String, String>> {
 
     public static final String FIRST_COLUMN="Choice";
     public static final String SECOND_COLUMN="Score";
-    int pom = 0;
     Context context;
     List<Boolean> submitedScore = new ArrayList<Boolean>();
 
@@ -28,14 +33,11 @@ public class ListViewAdapter extends ArrayAdapter<HashMap<String, String>> {
     TextView txtFirst;
     TextView txtSecond;
 
-    public ListViewAdapter(List<Boolean> submitedScores, Context context, ArrayList<HashMap<String, String>> list) {
+    public ScoreListViewAdapter(List<Boolean> submitedScores, Context context, ArrayList<HashMap<String, String>> list) {
         super(context, R.layout.column_row, list);
         this.submitedScore = submitedScores;
         this.context = context;
         this.list = list;
-    }
-    public void setSubmitedScore () {
-
     }
 
     @Override
@@ -43,12 +45,6 @@ public class ListViewAdapter extends ArrayAdapter<HashMap<String, String>> {
         // TODO Auto-generated method stub
         return list.size();
     }
-
-//    @Override
-//    public Object getItem(int position) {
-//        // TODO Auto-generated method stub
-//        return list.get(position);
-//    }
 
     @Override
     public long getItemId(int position) {

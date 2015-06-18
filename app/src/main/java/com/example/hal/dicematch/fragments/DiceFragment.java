@@ -1,4 +1,4 @@
-package com.example.hal.dicematch.util;
+package com.example.hal.dicematch.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -10,16 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.hal.dicematch.R;
+import com.example.hal.dicematch.gameLogic.Dice;
+import com.example.hal.dicematch.util.SquareButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 
+/**
+ * Fragment containing dice buttons, roll button a and a finish button.
+ */
 public class DiceFragment extends Fragment implements Serializable {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private static final int DICES_COUNT = 5;
     final Handler mHandler = new Handler();
     OnFinishRollSelectedListener mListener;
@@ -34,6 +35,15 @@ public class DiceFragment extends Fragment implements Serializable {
         // Required empty public constructor
     }
 
+    /**
+     * Interface for communication with the calling Activity.
+     */
+    public interface OnFinishRollSelectedListener {
+        void onFinishThrow(ArrayList<Integer> dices);
+        Boolean isTimeToWriteScore();
+        void setTimeToWriteScore(Boolean timeToWriteScore);
+    }
+
 
     public void lightFinish(boolean timeToWriteScore) {
         if (timeToWriteScore) {
@@ -43,27 +53,17 @@ public class DiceFragment extends Fragment implements Serializable {
         }
     }
 
-    public void falseNewGame () {
+    public void falseNewGame() {
         newGame = false;
     }
 
-    public void setDiceSize (int diceSize) {
+    public void setDiceSize(int diceSize) {
         this.diceSize = diceSize;
     }
 
-    public void setThrowStatus (int throwNumber) {
+    public void setThrowStatus(int throwNumber) {
         this.actualThrow = throwNumber;
         //this.wait = wait;
-    }
-
-    // TODO: Rename and change types and number of parameters
-    public static DiceFragment newInstance(String param1, String param2) {
-        DiceFragment fragment = new DiceFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -83,8 +83,8 @@ public class DiceFragment extends Fragment implements Serializable {
         return diceSettings;
     }
 
-    public void initDiceFragment (LayoutInflater inflater, ViewGroup container,
-                                  Bundle savedInstanceState) {
+    public void initDiceFragment(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
         diceSettings = inflater.inflate(R.layout.fragment_dice, container, false);
         // Inflate the layout for this fragment
         this.createDice(savedInstanceState);
@@ -119,7 +119,15 @@ public class DiceFragment extends Fragment implements Serializable {
         });
     }
 
-    public ArrayList<Integer> getDiceValues () {
+    public boolean reCheckAllDices() {
+        for (int i = 0; i < 5; i++) {
+            dices.get(i).changeChecked();
+            dices.get(i).changeChecked();
+        }
+        return true;
+    }
+
+    public ArrayList<Integer> getDiceValues() {
         return this.diceValues;
     }
 
@@ -143,11 +151,11 @@ public class DiceFragment extends Fragment implements Serializable {
                 but.setHeight(diceSize);
                 but.setWidth(diceSize);
                 final int finalI = i;
-                if (savedInstanceState==null) {
+                if (savedInstanceState == null) {
                     dices.add(new Dice(but));
                     //dices.get(i).roll(true);
                 } else {
-                    dices.add(new Dice(diceValues.get(i),but));
+                    dices.add(new Dice(diceValues.get(i), but));
 
                 }
                 dices.get(i).setHandler(new View.OnClickListener() {
@@ -160,9 +168,8 @@ public class DiceFragment extends Fragment implements Serializable {
             }
             if (diceValues.size() > 0) {
                 this.setDices(diceValues);
-                Log.d("INFO", "Loading dices");
             }
-            if ((newGame)&&(savedInstanceState==null)) {
+            if ((newGame) && (savedInstanceState == null)) {
                 rollAllDice();
                 falseNewGame();
             }
@@ -192,7 +199,6 @@ public class DiceFragment extends Fragment implements Serializable {
     }
 
     public void saveDiceValues() {
-        Log.d("INFO","Saving dices");
         ArrayList<Integer> diceVals = new ArrayList<>();
         for (int i = 0; i < dices.size(); i++) {
             diceVals.add(dices.get(i).getValue());
@@ -204,20 +210,20 @@ public class DiceFragment extends Fragment implements Serializable {
         for (int j = 0; j < 6; j++) {
             mHandler.postDelayed(new Runnable() {
                 public void run() {
-                    for (int i = 0; i < DICES_COUNT; i++) {
+                    for (int i = 0; i < dices.size(); i++) {
                         dices.get(i).roll();
                     }
-                }
+                    }
             }, 200 * j);
         }
         mHandler.postDelayed(new Runnable() {
             public void run() {
                 reorderDices();
                 actualThrow++;
+                Log.d("INFO", "last");
                 if (actualThrow == 2) {
                     diceSettings.findViewById(R.id.finishButton).performClick();
                 }
-
             }
         }, 1200);
     }
@@ -227,7 +233,7 @@ public class DiceFragment extends Fragment implements Serializable {
             Log.d("INFO", "no dice found");
         }
         for (int i = 0; i < diceValues.size(); i++) {
-            dices.get(i).setValue(diceValues.get(i));
+            dices.get(i).setStatus(diceValues.get(i), false);
         }
         this.reorderDices();
     }
@@ -237,33 +243,35 @@ public class DiceFragment extends Fragment implements Serializable {
     }
 
     public void reorderDices() {
-        for (int i = 0; i < dices.size(); i++) {
-            for (int j = 0; j < dices.size() - 1; j++) {
+        Log.d("INFO",  "REORDER");
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
                 if (dices.get(j).getValue() > dices.get(j + 1).getValue()) {
                     this.swapDices(j, j + 1);
                 }
             }
         }
+
+        for (int i = 0; i < dices.size(); i++) {
+            dices.get(i).setButtonImage();
+        }
     }
 
     public void swapDices(int i, int j) {
         int tmp = dices.get(i).getValue();
-        if (dices.get(i).getChecked() != dices.get(j).getChecked()) {
-            dices.get(i).changeChecked();
-            dices.get(j).changeChecked();
-        }
-        dices.get(i).setValue(dices.get(j).getValue());
-        dices.get(j).setValue(tmp);
-
+        boolean che = dices.get(i).getChecked();
+//        if (dices.get(i).getChecked() != dices.get(j).getChecked()) {
+//            dices.get(i).changeChecked();
+//            dices.get(j).changeChecked();
+//            Log.d("INFO",i+" "+j);
+//        }
+        Log.d("INFO",  dices.get(i).getChecked()+ " " + i + "+" + j + " " +  dices.get(j).getChecked());
+        dices.get(i).setStatus(dices.get(j).getValue(), dices.get(j).getChecked());
+        dices.get(j).setStatus(tmp, che);
+        Log.d("INFO",  dices.get(i).getChecked()+ " " + i + "+" + j + " " +  dices.get(j).getChecked());
     }
 
     public int getRollNumber() {
         return actualThrow;
-    }
-
-    public interface OnFinishRollSelectedListener {
-        void onFinishThrow(ArrayList<Integer> dices);
-        Boolean isTimeToWriteScore();
-        void setTimeToWriteScore(Boolean timeToWriteScore);
     }
 }

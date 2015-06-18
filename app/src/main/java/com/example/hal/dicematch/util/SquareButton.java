@@ -6,6 +6,10 @@ import android.util.AttributeSet;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+/**
+ * This is used to make square buttons.
+ * @see Button
+ */
 public class SquareButton extends Button {
 
     public SquareButton(Context context) {
@@ -16,7 +20,6 @@ public class SquareButton extends Button {
         super(context, attrs);
     }
 
-    // This is used to make square buttons.
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {

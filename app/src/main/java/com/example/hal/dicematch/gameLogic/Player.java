@@ -1,9 +1,13 @@
-package com.example.hal.dicematch.util;
+package com.example.hal.dicematch.gameLogic;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom class to interpret Player logic and score counting logic.
+ * Score counting logic will be moved to Game class later.
+ */
 public class Player implements Serializable{
     ArrayList<Integer> scoreList = new ArrayList<>();
     ArrayList<Boolean> writableList = new ArrayList<>();
@@ -11,8 +15,8 @@ public class Player implements Serializable{
     int actualThrow;
     boolean bonus1Activated = false;
     boolean bonus1Writen = false;
-    boolean bonus2Activated = false;
     private int bonus2;
+    private boolean bonus2add = false;
 
 
     public Player (int rows) {
@@ -27,13 +31,24 @@ public class Player implements Serializable{
         }
     }
 
+    /**
+     * Returns which rows are eligible for score submit.
+     */
     public ArrayList<Boolean> getWritableList () {
         return this.writableList;
     }
 
+    /**
+     * Returns score value from particular row / category.
+     */
     public int getScore (int row) {
         return this.scoreList.get(row);
     }
+
+    /**
+     * Set score value to particular row / category if able to do it.
+     * @param dices ordered dice values
+     */
     public boolean setScore (int position, List<Integer> dices) {
         if (writableList.get(position)) {
             int tmp = this.saveScore(dices, position);
@@ -49,11 +64,11 @@ public class Player implements Serializable{
                     this.scoreList.set(6, 30);
                     this.bonus1Writen = true;
                 }
-                if (bonus2>1) {
-                    this.scoreList.set(rowsTotal - 1, (this.scoreList.get(rowsTotal - 1) + (bonus2-1)*100));
-                    this.scoreList.set(13, (bonus2-1)*100);
-                    this.bonus1Writen = true;
-                }
+            }
+            if (bonus2add) {
+                this.scoreList.set(13, bonus2*100);
+                this.scoreList.set(rowsTotal - 1, (this.scoreList.get(rowsTotal - 1) + 100));
+                bonus2add = false;
             }
             this.writableList.set(position, false);
             this.scoreList.set(rowsTotal - 1, (this.scoreList.get(rowsTotal - 1) + tmp));
@@ -63,10 +78,16 @@ public class Player implements Serializable{
             return false;
         }
     }
+
+
     public ArrayList<Integer> getFullScore () {
         return this.scoreList;
     }
 
+    /**
+     * Counts score points based on position / category to be writen to.
+     * @param dices ordered dice values
+     */
     public Integer saveScore(List<Integer> dices, int position) {
         Integer tmp = 0;
         int temp;
@@ -156,16 +177,16 @@ public class Player implements Serializable{
                     tmp+=dices.get(i);
                 }
                 break;
-            default:
-                temp=0;
-                for (int i = 0; i < dices.size(); i++) {
-                    if (dices.get(2).equals(dices.get(i))) {
-                        temp++;
-                    }
-                }
-                if ((temp == 5)&&(this.getScore(12)!=0)) {
-                    this.bonus2++;
-                }
+        }
+        temp=0;
+        for (int i = 0; i < dices.size(); i++) {
+            if (dices.get(2).equals(dices.get(i))) {
+                temp++;
+            }
+        }
+        if ((temp == 5)&&(this.getScore(12)!=0)) {
+            this.bonus2++;
+            bonus2add = true;
         }
         return tmp;
     }

@@ -1,4 +1,4 @@
-package com.example.hal.dicematch.util;
+package com.example.hal.dicematch.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -15,15 +15,18 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.example.hal.dicematch.GameActivity;
+import com.example.hal.dicematch.activities.GameActivity;
 import com.example.hal.dicematch.R;
 
-public class StartDialogFragment extends DialogFragment{
+/**
+ * Dialog to choose the number of human and AI players;
+ */
+public class StartDialogFragment extends DialogFragment {
 
     private static final String INFO = "INFO";
     private static final String ERROR = "ERROR";
     private static final String RESULT = "RESULT";
-    static final int PICK_CONTACT_REQUEST = 1;
+    static final int EXTRAS_VAL = 1;
 
     public StartDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -42,32 +45,36 @@ public class StartDialogFragment extends DialogFragment{
                              Bundle savedInstanceState) {
         // Inflate the layout to use as dialog or embedded fragment
         final View startSettings = inflater.inflate(R.layout.fragment_start_dialog, container, false);
-            SeekBar bar1 = (SeekBar) startSettings.findViewById(R.id.plCountBar);
-            bar1.setProgress(0);
+
+        SeekBar bar1 = (SeekBar) startSettings.findViewById(R.id.plCountBar);
+        bar1.setProgress(0);
         bar1.setEnabled(false);
-            ((TextView) (startSettings.findViewById(R.id.noPlay))).setText("Human Players: " + 1);
-            bar1.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-                //@Override
-                public void onProgressChanged(SeekBar arg0, int progress, boolean fromTouch) {
-                    ((TextView) (startSettings.findViewById(R.id.noPlay))).setText("Human Players: " + String.valueOf(progress+1));
-                }
+        ((TextView) (startSettings.findViewById(R.id.noPlay))).setText("Human Players: " + 1);
+        bar1.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            //@Override
+            public void onProgressChanged(SeekBar arg0, int progress, boolean fromTouch) {
+                ((TextView) (startSettings.findViewById(R.id.noPlay))).setText("Human Players: " + String.valueOf(progress + 1));
+            }
 
-                //@Override
-                public void onStartTrackingTouch(SeekBar arg0) {
-                }
+            //@Override
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
 
-                //@Override
-                public void onStopTrackingTouch(SeekBar arg0) {
-                }
-            });
+            //@Override
+            public void onStopTrackingTouch(SeekBar arg0) {
+            }
+        });
+
         SeekBar bar2 = (SeekBar) startSettings.findViewById(R.id.compCountBar);
         bar2.setProgress(0);
         bar2.setEnabled(false);
+
         ((TextView) (startSettings.findViewById(R.id.noComp))).setText("AI Players: " + 0);
+
         bar2.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             //@Override
             public void onProgressChanged(SeekBar arg0, int progress, boolean fromTouch) {
-                ((TextView) (startSettings.findViewById(R.id.noComp))).setText("AI Players: " + String.valueOf(progress-1));
+                ((TextView) (startSettings.findViewById(R.id.noComp))).setText("AI Players: " + String.valueOf(progress - 1));
             }
 
             //@Override
@@ -88,12 +95,9 @@ public class StartDialogFragment extends DialogFragment{
 
         View.OnClickListener startGameHandler = new View.OnClickListener() {
             public void onClick(View v) {
-                int result;
                 Intent intent = new Intent();
-                String txtid = ((TextView)startSettings.findViewById(R.id.noPlay)).getText().toString();
                 intent.setClass(getActivity(), GameActivity.class);
-
-                startActivityForResult(intent, PICK_CONTACT_REQUEST);
+                startActivityForResult(intent, EXTRAS_VAL);
                 getDialog().dismiss();
             }
         };
@@ -106,16 +110,18 @@ public class StartDialogFragment extends DialogFragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                Log.d("INFO", "fra" + data.getStringExtra("result"));
+            if (resultCode == Activity.RESULT_OK) {
+                Log.d(INFO, "fra" + data.getStringExtra("result"));
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                Log.d("INFO", "fra canceled");
+                Log.d(INFO, "fragment canceled");
             }
         }
-    }//onActivityResult
+    }
 
-    /** The system calls this only when creating the layout in a dialog. */
+    /**
+     * The system calls this only when creating the layout in a dialog.
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // The only reason you might override this method when using onCreateView() is

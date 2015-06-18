@@ -1,4 +1,4 @@
-package com.example.hal.dicematch;
+package com.example.hal.dicematch.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +10,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.example.hal.dicematch.util.ListViewScoreAdapter;
+import com.example.hal.dicematch.R;
+import com.example.hal.dicematch.listViewSupport.HSListViewAdapter;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 
+/**
+ * Activity loading and showing leaderboard from a file.
+ */
 public class HighScoreActivity extends Activity {
 
 
@@ -39,10 +43,6 @@ public class HighScoreActivity extends Activity {
             setContentView(R.layout.activity_high_score);
             //Remove notification bar
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            Bundle extras = getIntent().getExtras();
-//            if (extras != null) {
-//
-//            }
             View.OnClickListener backHandler = new View.OnClickListener() {
                 public void onClick(View v) {
                     finish();
@@ -52,19 +52,11 @@ public class HighScoreActivity extends Activity {
             b1.setOnClickListener(backHandler);
             ListView listView = (ListView) findViewById(R.id.highscore_listview);
             this.loadScores();
-            ListViewScoreAdapter adapter = new ListViewScoreAdapter(this, highScoreList);
+            HSListViewAdapter adapter = new HSListViewAdapter(this, highScoreList);
             listView.setAdapter(adapter);
          } catch (Exception e) {
             Log.e("INFO","chyba v onCreate HS" + e.toString());
         }
-    }
-
-    public ArrayList<HashMap<String, String>> getList () {
-        return highScoreList;
-    }
-
-    public void setList (ArrayList<HashMap<String, String>> list) {
-        this.highScoreList=list;
     }
 
     @Override
@@ -81,18 +73,13 @@ public class HighScoreActivity extends Activity {
         try {
             File file = new File(this.getFilesDir().getAbsolutePath() + "/high_score.dat");
             if (file.exists()) {
-                Log.d("INFO", "exist ");
                 FileInputStream fos = new FileInputStream(file.toString());
-                Log.d("INFO", "exist ");
                 ObjectInputStream ois = new ObjectInputStream(fos);
-                Log.d("INFO", "exist ");
                 HashMap<String, Serializable> loadedData;
-                Log.d("INFO", "exist ");
                 loadedData = (HashMap<String, Serializable>) ois.readObject();
-                Log.d("INFO", "exist ");
                 this.highScoreList = (ArrayList<HashMap<String, String>>) loadedData.get("1");
-                Log.d("INFO", "exist ");
             } else {
+                // creates new high score file filled with 0 scores
                 file = new File("high_score.dat");
                 ArrayList<HashMap<String, String>> scores = new ArrayList<>();
                     for (int i = 0; i < HIGH_SCORE_SIZE; i++) {
